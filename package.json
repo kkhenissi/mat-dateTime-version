@@ -49,7 +49,7 @@
     "react": "^15.6.2",
     "rxjs": "6.5.2",
     "screenfull": "^3.3.0",
-    "swagger-ui": "2.2.10",
+    "swagger-ui": "3.23.11",
     "tslib": "1.10.0",
     "zone.js": "^0.9.1"
   },
