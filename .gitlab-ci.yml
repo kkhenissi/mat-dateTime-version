@@ -1,0 +1,296 @@
+image: jhipster/jhipster:v6.3.1
+
+variables:
+  REGISTRY_URL: $CI_REGISTRY
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  IMAGE_COMPOSE: $CI_REGISTRY_IMAGE/docker-compose:1.0
+  IMAGE_CENTOS_JRE: $CI_REGISTRY_IMAGE/centos-jre11:1.0
+  IMAGE_ARCHV_MGN_TEST: $CI_REGISTRY_IMAGE/arch-mgn-test:1.0
+  DOCKER_COMPOSE_VERSION: 1.24.1
+  DEPLOY_HOST: and-centos-dev-01.akka.eu
+
+cache:
+  key: '$CI_COMMIT_REF_NAME'
+  paths:
+    - .maven/
+    - .node/
+    - node_modules/
+
+stages:
+  - pre-build
+  - build
+  - test
+  - analyze
+  - package
+  - doc
+  - release
+  - pre-liv
+  - deploy
+  - perf
+
+before_script:
+  - export NG_CLI_ANALYTICS="false"
+  - export MAVEN_USER_HOME=${CI_PROJECT_DIR}/.maven
+  - if [ ! -z "$PROXY" ] ; then
+  - gitlab-ci-data/proxy_config_file_create.sh
+  - export http_proxy=$PROXY
+  - export https_proxy=$PROXY
+  - export no_proxy=$NO_PROXY
+  - fi
+  - ./mvnw com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v10.16.3 -DnpmVersion=6.11.3 -Dmaven.repo.local=$MAVEN_USER_HOME
+  - ./mvnw com.github.eirslett:frontend-maven-plugin:npm -Dmaven.repo.local=$MAVEN_USER_HOME
+
+maven-compile:
+  stage: build
+  script:
+    - ./mvnw compile -Dmaven.repo.local=$MAVEN_USER_HOME
+  artifacts:
+    paths:
+      - target/classes/
+      - target/generated-sources/
+    expire_in: 7 day
+
+doc:
+  stage: doc
+  script:
+    - ./mvnw javadoc:javadoc -Dmaven.repo.local=$MAVEN_USER_HOME
+    - npm run compodoc
+  artifacts:
+    paths:
+      - target/site/
+      - documentation/
+    expire_in: 7 day
+
+maven-test:
+  stage: test
+  script:
+    - mkdir -p /tmp/STS
+    - mkdir -p /tmp/LTS
+    - ./mvnw -Dmaven.repo.local=$MAVEN_USER_HOME -Dapplication.root-path-in-st="/tmp/STS"  -Dapplication.root-path-in-lt="/tmp/LTS" &
+    - ./gitlab-ci-data/waitServer.sh  http://localhost:8080 240s
+    - ./mvnw verify -Dmaven.repo.local=$MAVEN_USER_HOME -DargLine="-Dkarate.env=ci"
+  artifacts:
+    reports:
+      junit: target/test-results/**/TEST-*.xml
+    paths:
+      - target/test-results
+      - target/jacoco
+      - target/cucumber-html-reports
+    expire_in: 7 day
+
+frontend-test:
+  stage: test
+  script:
+    - ./mvnw com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME
+  artifacts:
+    reports:
+      junit: target/test-results/TESTS-results-jest.xml
+    paths:
+      - target/test-results
+      - target/jacoco
+    expire_in: 7 day
+sonar-analyze:
+  stage: analyze
+  dependencies:
+    - maven-test
+    - frontend-test
+  only:
+    variables:
+      - $SONAR_URL
+  script:
+    - ./mvnw compile -Dmaven.repo.local=$MAVEN_USER_HOME
+    - ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent initialize sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN -Dmaven.repo.local=$MAVEN_USER_HOME
+    - ./script/calculDependency.sh
+  artifacts:
+    when: on_failure
+    expire_in: 7 day
+    paths:
+      - target/dependencies
+  allow_failure: true
+
+maven-package:
+  stage: package
+  script:
+    - ./mvnw verify -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+    - mkdir -p target/archivemanager/testData/src/test/ target/archivemanager/testData/target target/archivemanager/volumes/config archivemanager/volumes/LTS_data archivemanager/volumes/STS_data archivemanager/volumes/postgresql_data
+    - cp src/main/docker/docker-compose.yml  src/main/docker/launch.sh  target/archivemanager
+    - sed -i "s/\${CI_COMMIT_REF_SLUG}/${CI_COMMIT_REF_SLUG}/" src/main/docker/launch.sh
+    - cp target/archivemanager*-tests.jar target/archivemanager/testData/target/
+    - cp src/main/resources/config/application-prod.yml src/main/resources/logback-spring.xml target/archivemanager/volumes/config
+    - cp -R src/test/java target/archivemanager/testData/src/test/
+  artifacts:
+    paths:
+      - target/*.jar
+      - target/archivemanager/
+      - target/classes
+    expire_in: 7 day
+
+docker-push:
+  stage: release
+  dependencies:
+    - maven-package
+  script:
+    - ./mvnw jib:build -Djib.from.image=$IMAGE_CENTOS_JRE -Djib.to.image=$IMAGE_TAG -Djib.from.auth.username=gitlab-ci-token  -Djib.from.auth.password=$CI_JOB_TOKEN -Djib.to.auth.username=gitlab-ci-token  -Djib.to.auth.password=$CI_JOB_TOKEN -Dgit_sha1=${CI_COMMIT_SHA}  -Dmaven.repo.local=$MAVEN_USER_HOME
+
+.docker-base:
+  stage: pre-build
+  image: docker:latest
+  before_script:
+    - echo "no before_script"
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - cd docker-base//docker-compose/
+    - ./build.sh -t ${IMAGE_COMPOSE} && docker push ${IMAGE_COMPOSE}
+    - cd ../centos-java11
+    - ./build.sh -t ${IMAGE_CENTOS_JRE} && docker push ${IMAGE_CENTOS_JRE}
+    - cd ../arch-mgn-test
+    - ./build.sh -t ${IMAGE_ARCHV_MGN_TEST} && docker push ${IMAGE_ARCHV_MGN_TEST}
+
+docker-base:
+  extends: .docker-base
+  only:
+    changes:
+      - docker-base/**/*
+      - .gitlab-ci.yml
+
+docker-base-manual:
+  extends: .docker-base
+  when: manual
+
+Livraison:
+  stage: pre-liv
+  image: $IMAGE_COMPOSE
+  #TODO services: dind and DOCKER_HOST
+  dependencies:
+    - maven-package
+  before_script:
+    - echo "no before_script"
+  script:
+    - if [ ! -z "$PROXY" ] ; then
+    - export http_proxy=$PROXY
+    - export https_proxy=$PROXY
+    - export no_proxy=$NO_PROXY
+    - fi
+    - cd target
+    - chmod a+x archivemanager/launch.sh
+    - curl -L --fail https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/run.sh -o archivemanager//docker-compose
+    - chmod a+x archivemanager/docker-compose
+    - docker rmi archivemanager:${CI_COMMIT_REF_SLUG} || true
+    - docker rmi ${IMAGE_TAG} || true
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull ${IMAGE_TAG}
+    - docker tag ${IMAGE_TAG} archivemanager:${CI_COMMIT_REF_SLUG}
+    - docker pull postgres:12.1
+    - docker tag $IMAGE_ARCHV_MGN_TEST arch-mgn-test:1.0
+    - docker save -o archivemanager/images.tar archivemanager:${CI_COMMIT_REF_SLUG} docker.io/docker/compose:${DOCKER_COMPOSE_VERSION} docker.io/jhipster/jhipster:v6.3.1 docker.io/postgres:12.1 arch-mgn-test:1.0
+    - tar cvzf ../archivemanager.tgz archivemanager
+  artifacts:
+    name: Livraison_$CI_COMMIT_REF_NAME
+    paths:
+      - archivemanager.tgz
+    expire_in: 30 day
+
+.deploy_template:
+  stage: deploy
+  image: $IMAGE_COMPOSE
+  dependencies:
+    - Livraison
+  environment:
+    name: archivemanager/$CI_COMMIT_REF_NAME
+    #url: https://${DEPLOY_HOST}:${DECAL_PORT[${CI_COMMIT_REF_NAME}]}
+    on_stop: stop_archivemanager
+  before_script:
+    - echo "no before_script"
+  script:
+    - if [ "${CI_COMMIT_REF_NAME}" = "master" ];
+    - then
+    - DECAL_PORT=1
+    - elif  [ "${CI_COMMIT_REF_NAME}" = "develop" ];
+    - then
+    - DECAL_PORT=2
+    - fi
+    - tar xvzf archivemanager.tgz
+    - export VOLUMES_ARCHIVEMANAGER_PATH="/tmp/${CI_COMMIT_REF_SLUG}"
+    - export KEY_STORE_PASSWORD=password
+    - cd archivemanager/
+    - chmod a+x ./launch.sh
+    - sed -i "s/443:8080/${DECAL_PORT:-""}443:8080/" docker-compose.yml
+    - sed -i "s/5432:5432/${DECAL_PORT:-""}5432:5432/" docker-compose.yml
+    - docker-compose down -v
+    - docker run --rm -v /tmp:/temp alpine rm -rf /temp/${CI_COMMIT_REF_SLUG}
+    - docker run --rm -v /tmp:/temp alpine mkdir -p /temp/${CI_COMMIT_REF_SLUG}/logs  /temp/${CI_COMMIT_REF_SLUG}/config/tls   /temp/${CI_COMMIT_REF_SLUG}/LTS   /temp/${CI_COMMIT_REF_SLUG}/STS
+    - docker run --rm -v /tmp:/temp alpine chmod -R a+rw /temp/${CI_COMMIT_REF_SLUG}/
+    - ./launch.sh --without-postgres-pass --without-started-test  --project-name ${CI_COMMIT_REF_SLUG}
+    - curl --insecure --silent --fail  https://${DEPLOY_HOST}:${DECAL_PORT:-""}443/management/health || sleep 10
+    - curl --insecure --silent --fail  https://${DEPLOY_HOST}:${DECAL_PORT:-""}443/management/health || sleep 10
+    - curl --insecure --silent --fail  https://${DEPLOY_HOST}:${DECAL_PORT:-""}443/management/health || sleep 10
+    - curl --insecure --silent --fail  https://${DEPLOY_HOST}:${DECAL_PORT:-""}443/management/health
+
+deploy:
+  extends: .deploy_template
+  only:
+    refs:
+      - master
+      - develop
+      - /^Release.*$/
+deploy_manual:
+  extends: .deploy_template
+  when: manual
+
+stop_archivemanager:
+  image: $IMAGE_COMPOSE
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - echo "no before_script"
+  script:
+    - echo "Remove archivemanager deployement app"
+    - tar xvzf archivemanager.tgz
+    - docker-compose down -v
+  when: manual
+  environment:
+    name: archivemanager/$CI_COMMIT_REF_NAME
+    action: stop
+
+.perf_template:
+  stage: perf
+  image: $IMAGE_COMPOSE
+  variables:
+    TARGET_URL: https://$DEPLOY_HOST
+    STS_PATH: /tmp/STS
+    CONTNER_NAME: Gatling_$CI_COMMIT_REF_SLUG
+  before_script:
+    - echo "no before_script"
+  script:
+    - if [ "${CI_COMMIT_REF_NAME}" = "master" ];
+    - then
+    - DECAL_PORT=1
+    - elif  [ "${CI_COMMIT_REF_NAME}" = "develop" ];
+    - then
+    - DECAL_PORT=2
+    - fi
+    - export TARGET_URL=https://$DEPLOY_HOST:${DECAL_PORT:-""}443
+    - docker stop $CONTNER_NAME || true
+    - docker run --rm -d -v /tmp/STS:/home/STS -w /home/jhipster/app/ --name "$CONTNER_NAME"  $IMAGE_ARCHV_MGN_TEST tail -f /dev/null
+    - docker exec  $CONTNER_NAME mkdir -p /home/jhipster/app/src/test/
+    - docker cp  ./src/test/gatling $CONTNER_NAME:/home/jhipster/app/src/test/gatling
+    - docker exec -e TARGET_URL -e STS_PATH  $CONTNER_NAME bash -c "./src/test/gatling/launch.sh"
+    - docker cp  $CONTNER_NAME:/home/jhipster/app/target/test-results/gatling target/test-results-gatling
+    - docker stop $CONTNER_NAME || true
+  artifacts:
+    paths:
+      - target/test-results-gatling/
+    expire_in: 7 day
+
+perf:
+  extends: .perf_template
+  only:
+    refs:
+      - master
+      - develop
+      - /^Release.*$/
+
+perf_manual:
+  extends: .perf_template
+  when: manual

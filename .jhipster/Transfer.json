@@ -1,0 +1,55 @@
+{
+    "name": "Transfer",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "direction",
+            "fieldType": "Direction",
+            "fieldValues": "LTS_TO_STS,STS_TO_LTS",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "TransferStatus",
+            "fieldValues": "IN_EDITION,IN_PROGRESS,DONE,FAILED"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "outputFile",
+            "otherEntityRelationshipName": "job",
+            "relationshipName": "outputFiles"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "scenarioFile",
+            "otherEntityRelationshipName": "job",
+            "relationshipName": "configFiles"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "jobs",
+            "relationshipName": "owner",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20191001144015",
+    "entityTableName": "transfer",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

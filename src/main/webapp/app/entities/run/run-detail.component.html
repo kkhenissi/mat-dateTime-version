@@ -1,0 +1,53 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="run">
+            <h2><span>Run</span> {{run.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Start Date</span></dt>
+                <dd>
+                    <span>{{run.startDate}}</span>
+                </dd>
+                <dt><span>End Date</span></dt>
+                <dd>
+                    <span>{{run.endDate}}</span>
+                </dd>
+                <dt><span>Status</span></dt>
+                <dd>
+                    <span>{{run.status}}</span>
+                </dd>
+                <dt><span>Platform Hardware Info</span></dt>
+                <dd>
+                    <span>{{run.platformHardwareInfo}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{run.description}}</span>
+                </dd>
+                <dt><span>Owner</span></dt>
+                <dd>
+                    {{run.ownerId}}
+                </dd>
+                <dt><span>Scenario</span></dt>
+                <dd>
+                    <div *ngIf="run.scenarioId">
+                        <a [routerLink]="['/scenario', run.scenarioId, 'view']">{{run.scenarioId}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/run', run.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

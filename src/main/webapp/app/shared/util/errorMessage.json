@@ -1,0 +1,15 @@
+{
+"messages": {
+    "erreurDateLength": "Vérifiez le nombre de chiffres saisis.",
+    "erreurDateFormat": "Le format doit être de type jj/mm/aaaa.",
+    "erreurDateValid": "Veuillez sélectionner / saisir une date valide.",
+    "erreurLimitInfDate": "Veuillez saisir une date supérieure au 01/01/1950.",
+    "erreurLimitInfDateDemande": "Veuillez saisir une date supérieure à la date de demande",
+    "erreurLimitInfDateDebutValidite": "Veuillez saisir une date supérieure à la date de début de validité",
+    "erreurLimitSupDate": "Veuillez saisir une date inférieure à la date du jour",
+    "erreurLimitPrevDate": "Veuillez saisir une année >= à l'année en cours",
+    "mustBeGrantThenStartDate":"End date must be grant then start date !"
+    
+  
+  }
+}

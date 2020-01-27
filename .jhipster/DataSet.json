@@ -1,0 +1,29 @@
+{
+    "name": "DataSet",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "scenarioFile",
+            "otherEntityRelationshipName": "dataset",
+            "relationshipName": "inputFiles"
+        }
+    ],
+    "changelogDate": "20191001144016",
+    "entityTableName": "data_set",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

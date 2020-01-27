@@ -1,0 +1,117 @@
+ 
+  <mat-toolbar>
+          <span>Search Scenarios From Filter</span> 
+          <span class="fill-remaining-space"></span>
+          <button class="btn-dialog-close" mat-stroked-button (click)="onSearchModalClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
+  </mat-toolbar>
+    
+
+        <form [formGroup]="searchForm" class="normal-form"  name="searchForm">
+            <mat-grid-list cols="2" rowHeight="250px">
+                    <!-- ------------ first grid ------------ -->
+              <mat-grid-tile>
+                <div class="controles-container">
+    
+                    <!-- <jhi-alert-error></jhi-alert-error> -->
+                    <!-- <mat-form-field [hidden]="!addForm.get('id').value" fxFlex="20" class="topLeftPadding">
+    
+                            <input matInput placeholder="ID" type="text"   id="id" name="id" formControlName="id"
+                                    readonly />
+                    </mat-form-field>   -->
+    
+                  <!-- <input type="hidden" formControlName="id"> -->
+    
+                  <mat-form-field fxFlex="60" class="topLeftPadding">
+                    <input matInput placeholder="Name" type="text"   name="name" id="field_name"
+                            formControlName="name"/>
+                    <!-- <div *ngIf="addForm.get('name').invalid && (addForm.get('name').dirty || addForm.get('name').touched)">
+                            <small class="form-text text-danger"
+                                    *ngIf="addForm.get('name').errors.required">
+                            This field is required.
+                            </small>
+                    </div> -->
+                  </mat-form-field>
+
+                    <!-- Créated Date beetween -->
+                    <div>
+                      <mat-form-field>
+                              <input matInput [matDatepicker]="picker1c"   [max]="maxDateTimeDebut" placeholder="Created between"
+                                     id="field_StartCreationDateTime" name="startCreationDateTime" formControlName="startCreationDateTime" (dateChange)="onBlurFromDate($event)">
+                              <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="startCreationDateTimeControl.value" (click)="setToNullValue(startCreationDateTimeControl)">
+                                      <mat-icon>close</mat-icon>
+                              </button> 
+                              <mat-datepicker-toggle matSuffix [for]="picker1c"></mat-datepicker-toggle>
+                              <mat-datepicker #picker1c></mat-datepicker>
+                      </mat-form-field>   
+                      <mat-form-field>
+                              <input matInput [matDatepicker]="picker2c" placeholder="And" [min]="minDateTimeFin"  
+                                     id="field_EndCreationDateTime" name="endCreationDateTime" formControlName="endCreationDateTime"  (dateChange)="onBlurFromDate($event)">
+                              <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="endCreationDateTimeControl.value" (click)="setToNullValue(endCreationDateTimeControl)">
+                                      <mat-icon>close</mat-icon>
+                              </button>   
+                              <mat-datepicker-toggle matSuffix [for]="picker2c"></mat-datepicker-toggle>
+                              <mat-datepicker #picker2c></mat-datepicker>
+                              <mat-error *ngIf="endCreationDateTimeControl.hasError('mustBeGrantThenStartDate')">
+                                      <strong>
+                                          {{'messages.mustBeGrantThenStartDate'}} 
+                                      </strong>
+                              </mat-error>
+                      </mat-form-field>        
+                  </div>
+    
+     
+    
+                  <!-- <mat-form-field fxFlex="50%">
+                    <input matInput [matDatepicker]="picker1" placeholder="Creation Date" id="field_creationDate" name="creationDate"
+                            (dateInput)="inputEvent($event)" (dateChange)="changeEvent($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker touchUi="false" #picker1></mat-datepicker>
+                  </mat-form-field> -->
+    
+    
+                   <mat-form-field fxFlex="40">
+                            <mat-label>Simalutation Mode</mat-label>
+                            <mat-select id="field_simulation">
+                                <mat-option value="PLAY">PLAY</mat-option>
+                                <mat-option value="REPLAY">REPLAY</mat-option>
+                                <mat-option value="UNDEFINED">UNDEFINED</mat-option>
+                            </mat-select>
+                   </mat-form-field>
+    
+                 </div>
+              </mat-grid-tile>
+              <!-- ------ second grid ---------  -->
+              <mat-grid-tile>
+                <div class="controles-container">
+                   <div>
+                            <mat-form-field fxFlex="50%">
+                                            <input matInput  [matDatepicker]="picker11"   [max]="maxSimDateTimeDebut"  placeholder="Start Simulated Date" id="field_startSimulatedDate"
+                                                    name="startSimulatedDateTime"
+                                                    formControlName="startSimulatedDateTime" (dateChange)="onBlurFromDate($event)"/>
+                                                    <mat-datepicker-toggle matSuffix [for]="picker11"></mat-datepicker-toggle>
+                                                    <mat-datepicker #picker11></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="50%">
+                                            <input matInput  [matDatepicker]="picker12" [min]="minSimDateTimeFin"   placeholder="End Simulated Date" id="field_endSimulatedDate"
+                                                    name="endSimulatedDateTime"
+                                                    formControlName="endSimulatedDateTime" (dateChange)="onBlurFromDate($event)"/>
+                                                    <mat-datepicker-toggle matSuffix [for]="picker12"></mat-datepicker-toggle>
+                                                    <mat-datepicker #picker12></mat-datepicker>
+                            </mat-form-field>
+            
+            
+                   </div>
+                   <mat-form-field fxFlex="98%">
+                            <input id="field_description" type="text"
+                             placeholder="Description"
+                              formControlName="description" matInput rows="5"  ></input>
+                    </mat-form-field>
+     
+                  <div class="button-row">
+                    <button mat-raised-button color="primary" (click)="onsearchSubmit()">Search</button>
+                    <button mat-raised-button color="warn" (click)="onClearAddForm()">Clear</button>
+                  </div>
+                </div>
+              </mat-grid-tile>
+            </mat-grid-list>
+          </form>

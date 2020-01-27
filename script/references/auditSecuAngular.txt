@@ -1,0 +1,4 @@
+install	swagger-ui	moderate	npm install swagger-ui@3.24.3	Reverse Tabnapping	https://npmjs.com/advisories/975	swagger-ui	Y
+install	swagger-ui	moderate	npm install swagger-ui@3.24.3	Cross-Site Scripting	https://npmjs.com/advisories/976	swagger-ui	Y
+install	swagger-ui	moderate	npm install swagger-ui@3.24.3	Cross-Site Scripting	https://npmjs.com/advisories/985	swagger-ui	Y
+

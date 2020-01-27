@@ -1,0 +1,16 @@
+<div fxLayout="row">
+        <div *ngIf="!dateOnly" [formGroup]="timeFormGroup">
+          <mat-form-field>
+            <input matInput [ngxTimepicker]="endTime" [format]="24"  placeholder="{{placeholderTime}}" formControlName="endTime" />
+          </mat-form-field>
+          <ngx-material-timepicker #endTime (timeSet)="timeChange($event)" [minutesGap]="10"></ngx-material-timepicker>
+        </div>
+        <div>
+          <mat-form-field>
+            <input id="pickerId" matInput [matDatepicker]="datepicker" placeholder="{{placeholderDate}}" [formControl]="dateForm"
+                   [min]="config.minDate" [max]="config.maxDate" (dateChange)="dateChange($event)">
+            <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+            <mat-datepicker #datepicker [disabled]="disabled" [touchUi]="config.touchUi" startView="{{config.startView}}"></mat-datepicker>
+          </mat-form-field>
+        </div>
+</div>

@@ -1,0 +1,87 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="scenarioFile">
+            <h2><span>Scenario File</span> {{scenarioFile.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>File Type</span></dt>
+                <dd>
+                    <span>{{scenarioFile.fileType}}</span>
+                </dd>
+                <dt><span>Relative Path In ST</span></dt>
+                <dd>
+                    <span>{{scenarioFile.relativePathInST}}</span>
+                </dd>
+                <dt><span>L T Insertion Date</span></dt>
+                <dd>
+                    <span>{{scenarioFile.lTInsertionDate}}</span>
+                </dd>
+                <dt><span>Path In LT</span></dt>
+                <dd>
+                    <span>{{scenarioFile.pathInLT}}</span>
+                </dd>
+                <dt><span>Format</span></dt>
+                <dd>
+                    <span>{{scenarioFile.format}}</span>
+                </dd>
+                <dt><span>Sub System At Origin Of Data</span></dt>
+                <dd>
+                    <span>{{scenarioFile.subSystemAtOriginOfData}}</span>
+                </dd>
+                <dt><span>Time Of Data</span></dt>
+                <dd>
+                    <span>{{scenarioFile.timeOfData}}</span>
+                </dd>
+                <dt><span>Security Level</span></dt>
+                <dd>
+                    <span>{{scenarioFile.securityLevel}}</span>
+                </dd>
+                <dt><span>Crc</span></dt>
+                <dd>
+                    <span>{{scenarioFile.crc}}</span>
+                </dd>
+                <dt><span>Owner</span></dt>
+                <dd>
+                    {{scenarioFile.ownerId}}
+                </dd>
+                <dt><span>Scenarios</span></dt>
+                <dd>
+                    <span *ngFor="let scenarios of scenarioFile.scenarios; let last = last">
+                        <a [routerLink]="['/scenario', scenarios?.id, 'view' ]">{{scenarios.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Job</span></dt>
+                <dd>
+                    <div *ngIf="scenarioFile.jobId">
+                        <a [routerLink]="['/transfer', scenarioFile.jobId, 'view']">{{scenarioFile.jobId}}</a>
+                    </div>
+                </dd>
+                <dt><span>Dataset</span></dt>
+                <dd>
+                    <div *ngIf="scenarioFile.datasetId">
+                        <a [routerLink]="['/data-set', scenarioFile.datasetId, 'view']">{{scenarioFile.datasetId}}</a>
+                    </div>
+                </dd>
+                <dt><span>Config Dataset</span></dt>
+                <dd>
+                    <div *ngIf="scenarioFile.configDatasetId">
+                        <a [routerLink]="['/config-data-set', scenarioFile.configDatasetId, 'view']">{{scenarioFile.configDatasetId}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/scenario-file', scenarioFile.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

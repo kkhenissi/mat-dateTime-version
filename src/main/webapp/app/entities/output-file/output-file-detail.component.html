@@ -1,0 +1,75 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="outputFile">
+            <h2><span>Output File</span> {{outputFile.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Relative Path In ST</span></dt>
+                <dd>
+                    <span>{{outputFile.relativePathInST}}</span>
+                </dd>
+                <dt><span>L T Insertion Date</span></dt>
+                <dd>
+                    <span>{{outputFile.lTInsertionDate}}</span>
+                </dd>
+                <dt><span>Path In LT</span></dt>
+                <dd>
+                    <span>{{outputFile.pathInLT}}</span>
+                </dd>
+                <dt><span>File Type</span></dt>
+                <dd>
+                    <span>{{outputFile.fileType}}</span>
+                </dd>
+                <dt><span>Format</span></dt>
+                <dd>
+                    <span>{{outputFile.format}}</span>
+                </dd>
+                <dt><span>Sub System At Origin Of Data</span></dt>
+                <dd>
+                    <span>{{outputFile.subSystemAtOriginOfData}}</span>
+                </dd>
+                <dt><span>Time Of Data</span></dt>
+                <dd>
+                    <span>{{outputFile.timeOfData}}</span>
+                </dd>
+                <dt><span>Security Level</span></dt>
+                <dd>
+                    <span>{{outputFile.securityLevel}}</span>
+                </dd>
+                <dt><span>Crc</span></dt>
+                <dd>
+                    <span>{{outputFile.crc}}</span>
+                </dd>
+                <dt><span>Owner</span></dt>
+                <dd>
+                    {{outputFile.ownerId}}
+                </dd>
+                <dt><span>Run</span></dt>
+                <dd>
+                    <div *ngIf="outputFile.runId">
+                        <a [routerLink]="['/run', outputFile.runId, 'view']">{{outputFile.runId}}</a>
+                    </div>
+                </dd>
+                <dt><span>Job</span></dt>
+                <dd>
+                    <div *ngIf="outputFile.jobId">
+                        <a [routerLink]="['/transfer', outputFile.jobId, 'view']">{{outputFile.jobId}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/output-file', outputFile.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

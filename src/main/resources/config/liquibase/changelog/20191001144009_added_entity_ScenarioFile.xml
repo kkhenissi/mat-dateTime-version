@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <!--
+        Added the entity ScenarioFile.
+    -->
+    <changeSet id="20191001144009-1" author="jhipster">
+        <createTable tableName="scenario_file">
+            <column name="relative_path_in_st" type="${clobType}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="input_type" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="file_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="l_t_insertion_date" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="path_in_lt" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="format" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="sub_system_at_origin_of_data" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="time_of_data" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="security_level" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="crc" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="dataset_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="config_dataset_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20191001144009-1-relations" author="jhipster">
+
+        <createTable tableName="scenario_file_scenarios">
+            <column name="scenarios_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scenario_file_relative_path_in_st" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="scenario_file_relative_path_in_st, scenarios_id" tableName="scenario_file_scenarios"/>
+
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+
+    <!--
+        Load sample data generated with Faker.js
+        - This data can be easily edited using a CSV editor (or even MS Excel) and
+          is located in the 'src/main/resources/config/liquibase/data' directory
+        - By default this data is applied when running with the JHipster 'dev' profile.
+          This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
+          Spring Boot configuration key.
+    -->
+    <!--<changeSet id="20191001144009-1-data" author="jhipster" context="faker">
+        <loadData
+                  file="config/liquibase/fake-data/scenario_file.csv"
+                  separator=";"
+                  tableName="scenario_file">
+            <column name="file_type" type="string"/>
+            <column name="relative_path_in_st" type="string"/>
+            <column name="l_t_insertion_date" type="date"/>
+            <column name="path_in_lt" type="string"/>
+            <column name="file_type" type="string"/>
+            <column name="format" type="string"/>
+            <column name="sub_system_at_origin_of_data" type="string"/>
+            <column name="time_of_data" type="DATETIME"/>
+            <column name="security_level" type="string"/>
+            <column name="crc" type="string"/> -->
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
+       <!-- </loadData>
+    </changeSet> -->
+
+</databaseChangeLog>

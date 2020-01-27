@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!--
+        Added the constraints for entity ScenarioFile.
+    -->
+    <changeSet id="20191001144009-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="scenario_file"
+                                 constraintName="fk_scenario_file_owner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="scenario_file_relative_path_in_st"
+                                 baseTableName="scenario_file_scenarios"
+                                 constraintName="fk_scenario_file_scenarios_scenario_file_relative_path_in_st"
+                                 referencedColumnNames="relative_path_in_st"
+                                 referencedTableName="scenario_file"/>
+
+        <addForeignKeyConstraint baseColumnNames="scenarios_id"
+                                 baseTableName="scenario_file_scenarios"
+                                 constraintName="fk_scenario_file_scenarios_scenarios_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="scenario"/>
+
+        <addForeignKeyConstraint baseColumnNames="dataset_id"
+                                 baseTableName="scenario_file"
+                                 constraintName="fk_scenario_file_dataset_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="data_set"/>
+
+        <addForeignKeyConstraint baseColumnNames="config_dataset_id"
+                                 baseTableName="scenario_file"
+                                 constraintName="fk_scenario_file_config_dataset_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="config_data_set"/>
+
+    </changeSet>
+</databaseChangeLog>

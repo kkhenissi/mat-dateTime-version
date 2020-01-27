@@ -1,0 +1,44 @@
+h2 {
+  font-family: 'HelveticaNeueW01-Thin';
+  font-size: 40px;
+  line-height: 120%;
+  margin-bottom: 30px;
+  color: #183782;
+  font-weight: 700;
+}
+
+.btn-primary {
+  font-size: 16px;
+  line-height: 20px;
+  padding: 0px 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 48px;
+  min-width: 112px;
+  font-weight: 400;
+  font-family: Roboto, 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, sans-serif;
+  border-radius: 2px;
+  letter-spacing: 0.4px;
+  box-shadow: none;
+  text-shadow: none;
+  text-transform: capitalize;
+  border: medium none;
+  cursor: pointer;
+  outline: currentcolor none medium;
+  color: white;
+  background-color: rgb(0, 85, 135);
+}
+th {
+  font-family: 'HelveticaNeueW01-Thin';
+  font-size: 17px;
+  line-height: 120%;
+  color: #183782;
+  font-weight: bold;
+}
+td {
+  font-family: 'HelveticaNeueW01-45Ligh';
+  font-size: 16px;
+  color: #575656;
+  letter-spacing: 0.25px;
+  line-height: 30px;
+}

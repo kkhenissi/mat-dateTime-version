@@ -1,0 +1,29 @@
+{
+    "name": "ConfigDataSet",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "scenarioFile",
+            "otherEntityRelationshipName": "configDataset",
+            "relationshipName": "configFiles"
+        }
+    ],
+    "changelogDate": "20191001144017",
+    "entityTableName": "config_data_set",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

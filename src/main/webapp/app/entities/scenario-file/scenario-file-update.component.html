@@ -1,0 +1,119 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-scenario-file-heading">Create or edit a Scenario File</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!editForm.get('id').value">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_fileType">File Type</label>
+                    <input type="text" class="form-control" name="fileType" id="field_fileType"
+                           formControlName="fileType"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_relativePathInST">Relative Path In ST</label>
+                    <input type="text" class="form-control" name="relativePathInST" id="field_relativePathInST"
+                           formControlName="relativePathInST"/>
+                    <div *ngIf="editForm.get('relativePathInST').invalid && (editForm.get('relativePathInST').dirty || editForm.get('relativePathInST').touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('relativePathInST').errors.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_lTInsertionDate">L T Insertion Date</label>
+                    <div class="input-group">
+                        <input id="field_lTInsertionDate" type="text" class="form-control" name="lTInsertionDate" ngbDatepicker  #lTInsertionDateDp="ngbDatepicker" formControlName="lTInsertionDate"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="lTInsertionDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_pathInLT">Path In LT</label>
+                    <input type="text" class="form-control" name="pathInLT" id="field_pathInLT"
+                           formControlName="pathInLT"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_format">Format</label>
+                    <input type="text" class="form-control" name="format" id="field_format"
+                           formControlName="format"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_subSystemAtOriginOfData">Sub System At Origin Of Data</label>
+                    <input type="text" class="form-control" name="subSystemAtOriginOfData" id="field_subSystemAtOriginOfData"
+                           formControlName="subSystemAtOriginOfData"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_timeOfData">Time Of Data</label>
+                    <div class="input-group">
+                        <input id="field_timeOfData" type="text" class="form-control" name="timeOfData" ngbDatepicker  #timeOfDataDp="ngbDatepicker" formControlName="timeOfData"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="timeOfDataDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_securityLevel">Security Level</label>
+                    <select class="form-control" name="securityLevel" formControlName="securityLevel" id="field_securityLevel">
+                        <option value="NORMAL">NORMAL</option>
+                        <option value="EIC">EIC</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_crc">Crc</label>
+                    <input type="text" class="form-control" name="crc" id="field_crc"
+                           formControlName="crc"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_owner">Owner</label>
+                    <select class="form-control" id="field_owner" name="owner" formControlName="ownerId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="field_scenarios">Scenarios</label>
+                    <select class="form-control" id="field_scenarios" multiple name="scenarios" formControlName="scenarios">
+                        <option [ngValue]="getSelected(editForm.get('scenarios').value, scenarioOption)" *ngFor="let scenarioOption of scenarios; trackBy: trackScenarioById">{{scenarioOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_job">Job</label>
+                    <select class="form-control" id="field_job" name="job" formControlName="jobId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="transferOption.id" *ngFor="let transferOption of transfers; trackBy: trackTransferById">{{transferOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_dataset">Dataset</label>
+                    <select class="form-control" id="field_dataset" name="dataset" formControlName="datasetId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="dataSetOption.id" *ngFor="let dataSetOption of datasets; trackBy: trackDataSetById">{{dataSetOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_configDataset">Config Dataset</label>
+                    <select class="form-control" id="field_configDataset" name="configDataset" formControlName="configDatasetId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="configDataSetOption.id" *ngFor="let configDataSetOption of configdatasets; trackBy: trackConfigDataSetById">{{configDataSetOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

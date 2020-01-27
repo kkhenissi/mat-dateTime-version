@@ -1,0 +1,24 @@
+{
+    "name": "DataFile",
+    "fields": [
+        {
+            "fieldName": "pathInLT",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "raw",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20191001144011",
+    "entityTableName": "data_file",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

@@ -1,0 +1,726 @@
+<div class="row">
+    <div class="col-sm-2">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item" (click)="addScenario()">
+                        <a class="nav-link"><fa-icon [icon]="'plus-circle'"></fa-icon><span> Add</span></a>
+                    </li>
+                    <li class="nav-item" (click)="searchScenarios()">
+                        <a class="nav-link"><fa-icon [icon]="'filter'" ></fa-icon><span> Filter</span></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <mat-nav-list>
+            <a *ngFor="let scenario of scenarios" mat-list-item [routerLink]='' (click)="updateForm(scenario)">  {{ scenario?.name }} </a>
+        </mat-nav-list>
+    </div>
+
+
+<div class="col-sm-10">
+    <mat-card class="archiv-box-card">
+    <div class="scenario" *ngIf="nameScenario" ><h3>Scenario Name : {{nameScenario}}</h3></div>
+    <mat-tab-group>
+        <!-- *************First Tab***************** -->
+        <mat-tab label="Information" title="Informations">
+            <ng-template matTabContent>
+
+                <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+
+                      <div class="container">
+                          <div fxLayout="row">
+                                <div class="col">
+                                        <jhi-alert-error></jhi-alert-error>
+                                        <mat-form-field [hidden]="!editForm.get('id').value" fxFlex="20" class="topLeftPadding">
+
+                                            <input matInput placeholder="ID" type="text"   id="id" name="id" formControlName="id"
+                                                   readonly />
+                                        </mat-form-field>
+                                </div>
+                                <div class="col">
+                                        <mat-form-field fxFlex="60" class="topLeftPadding">
+                                                    <input matInput placeholder="Name" type="text"   name="name" id="field_name"
+                                                           formControlName="name"/>
+                                                    <div *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
+                                                        <small class="form-text text-danger"
+                                                               *ngIf="editForm.get('name').errors.required">
+                                                            This field is required.
+                                                        </small>
+                                                    </div>
+
+                                                    <!-- <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear">
+                                                        <mat-icon>close</mat-icon>
+                                                    </button> -->
+                                        </mat-form-field>
+
+                                </div>
+
+                          </div>
+
+                      </div>
+
+                        <!-- <mat-form-field>
+
+                            <input matInput placeholder="Name" type="text"   name="name" id="field_name"
+                                   formControlName="name"/> -->
+
+                        <!-- </mat-form-field> -->
+                        <div class="container">
+                                <div fxLayout="row">
+                                        <div class="col">
+                                                <mat-form-field fxFlex="50%">
+                                                        <input matInput [matDatepicker]="picker1" placeholder="Creation Date" id="field_creationDate" name="creationDate"
+                                                               (dateInput)="inputEvent($event)" (dateChange)="changeEvent($event)">
+                                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                                        <mat-datepicker touchUi="false" #picker1></mat-datepicker>
+
+                                                </mat-form-field>
+                                                <!-- <span>{{picker1}}</span>   -->
+                                                <!-- <mat-form-field fxFlex="20">
+                                                        <input matInput placeholder="Creation Date" id="field_creationDate" type="text"   name="creationDate" ngbDatepicker  #creationDateDp="ngbDatepicker" formControlName="creationDate"/>
+                                                        <span class="input-group-append">
+                                                           <button type="button" class="btn btn-secondary" (click)="creationDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                                                        </span>
+                                                </mat-form-field>         -->
+
+
+                                        </div>
+                                        <div class="col">
+                                                <mat-form-field fxFlex="40">
+                                                        <mat-label>Simalutation Mode</mat-label>
+                                                        <mat-select id="field_simulation">
+                                                            <mat-option value="PLAY">PLAY</mat-option>
+                                                            <mat-option value="REPLAY">REPLAY</mat-option>
+                                                            <mat-option value="UNDEFINED">UNDEFINED</mat-option>
+                                                        </mat-select>
+                                                </mat-form-field>
+
+                                        </div>
+
+                                </div>
+
+                        </div>
+
+                        <div class="container">
+                           <div fxLayout="row">
+                                <div class="col">
+                                                <!-- <mat-label>Start Simulated Date</mat-label> -->
+                                <!-- <label class="form-control-label" for="field_startSimulatedDate">Start Simulated Date</label> -->
+
+                                <!-- <mat-form-field fxFlex="20">
+                                        <input matInput [matDatepicker]="picker1" placeholder="Creation Date" id="field_creationDate" name="creationDate">
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field> -->
+
+                                <!-- <jhi-datetimepicker></jhi-datetimepicker> -->
+                                <mat-form-field fxFlex="50%">
+                                        <input matInput  [matDatepicker]="picker11" placeholder="Start Simulated Date" id="field_startSimulatedDate"
+                                               name="startSimulatedDate"
+                                               formControlName="startSimulatedDate"/>
+                                               <mat-datepicker-toggle matSuffix [for]="picker11"></mat-datepicker-toggle>
+                                               <mat-datepicker #picker11></mat-datepicker>
+                                </mat-form-field>
+
+                            </div>
+
+                            <div class="col">
+                                                            <!-- <mat-label>Start Simulated Time</mat-label> -->
+                            <!-- <label class="form-control-label" for="field_startSimulatedTime">Start Simulated Time</label> -->
+
+                            <mat-form-field fxFlex="40%">
+                                <input  matInput atp-time-picker  placeholder="Start Simulated Time"
+                                        id="field_startSimulatedTime" name="startSimulatedTime"
+                                        type="text" formControlName="startSimulatedTime"/>
+                                <!-- <span class="input-group-append">
+                                    <button type="button" class="btn btn-secondary"><fa-icon
+                                        [icon]="'clock'"></fa-icon></button>
+                                </span> -->
+                            </mat-form-field>
+
+                            <!-- <mat-form-field fxFlex="50%">
+                                    <input matInput  [matDatepicker]="picker12" placeholder="Start Simulated Time" id="field_startSimulatedTime"
+                                            name="startSimulatedTime"
+                                            formControlName="startSimulatedTime"/>
+                                            <mat-datepicker-toggle matSuffix [for]="picker12"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker12></mat-datepicker>
+                            </mat-form-field> -->
+
+                           </div>
+
+
+                           </div>
+
+                        </div>
+                        <div class="container">
+
+                            <div fxLayout="row">
+                                <div class="col">
+                                    <!-- <mat-label>End Simulated Date</mat-label> -->
+                                    <!-- <label class="form-control-label" for="field_simulation">End Simulated Date</label> -->
+                                    <!-- <div class="input-group">
+                                        <input id="field_simulation" type="text" class="form-control"
+                                               name="simulation" ngbDatepicker #simulationDp="ngbDatepicker"
+                                               formControlName="simulation"/>
+                                        <span class="input-group-append">
+                                                <button type="button" class="btn btn-secondary" (click)="simulationDp.toggle()"><fa-icon
+                                                 [icon]="'calendar-alt'"></fa-icon></button>
+                                        </span>
+                                    </div> -->
+                                    <mat-form-field fxFlex="50%">
+                                            <input matInput  [matDatepicker]="picker13" [min]="minStartSimulatedDtae" placeholder="End Simulated Date" id="field_simulation"
+                                                   name="simulation"
+                                                   formControlName="simulation"/>
+                                                   <mat-datepicker-toggle matSuffix [for]="picker13"></mat-datepicker-toggle>
+                                                   <mat-datepicker #picker13></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col">
+
+                                        <mat-form-field fxFlex="40%">
+                                                <input  matInput atp-time-picker  placeholder="End Simulated Time"
+                                                        id="field_endSimulatedTime" name="endSimulatedTime"
+                                                        type="text" formControlName="endSimulatedTime"/>
+                                                <!-- <span class="input-group-append">
+                                                    <button type="button" class="btn btn-secondary"><fa-icon
+                                                        [icon]="'clock'"></fa-icon></button>
+                                                </span> -->
+                                        </mat-form-field>
+
+                                        <!-- <mat-form-field fxFlex="50%">
+                                                <input matInput  [matDatepicker]="picker14" placeholder="End Simulated Time" id="field_endSimulatedTime"
+                                                       name="endSimulatedTime"
+                                                       formControlName="endSimulatedTime"/>
+                                                       <mat-datepicker-toggle matSuffix [for]="picker14"></mat-datepicker-toggle>
+                                                       <mat-datepicker #picker14></mat-datepicker>
+                                        </mat-form-field> -->
+                                    <!-- <mat-label>End Simulated Time</mat-label> -->
+                                    <!-- <label class="form-control-label" for="field_endSimulatedTime">End Simulated Time</label> -->
+                                    <!-- <div class="input-group">
+                                        <input id="field_endSimulatedTime" type="text" name="endSimulatedTime"
+                                               class="form-control" atp-time-picker formControlName="endSimulatedTime"/>
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary"><fa-icon
+                                                [icon]="'clock'"></fa-icon></button>
+                                        </span>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                                <!-- <mat-form-field fxFlex="100%">
+                                        <div class="form-group">
+                                            <input matInput placeholder="Description" type="text"   name="description" id="field_description"
+                                            formControlName="description"/>
+                                </div>
+                                </mat-form-field> -->
+
+                                <mat-form-field fxFlex="98%">
+                                        <textarea id="field_description"
+                                         placeholder="Description"
+                                          formControlName="description" matInput rows="5"  ></textarea>
+                                        <!-- <mat-hint fxFlex="5" align="end">
+                                          {{resultatsAttendusControl.value?.length}} / {{maxLength}}
+                                        </mat-hint> -->
+                                </mat-form-field>
+
+                        </div>
+
+                            <div>
+                                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                                </button>
+                            </div>
+            </form>
+            </ng-template>
+        </mat-tab>
+        <!-- *************Second Tab***************** -->
+        <mat-tab label="Config Files">
+            <ng-template matTabTitle>Config Files</ng-template>
+            <ng-template matTabContent>
+              <ng-container>
+              <form name="searchForm" role="form" novalidate (ngSubmit)="searchFiltredConfigFiles()" [formGroup]="searchForm">
+
+                <mat-grid-list cols="2" rowHeight="350px">
+                    <div class="search-row-top">
+                            <mat-toolbar>
+                                    <span class="fill-remaining-space"></span>
+                                        <span>Search Criteria</span>
+                                    <span class="fill-remaining-space"></span>
+                            </mat-toolbar>
+                    </div>
+                     <mat-grid-tile>
+                        <div class="controles-container">
+                                <div>
+                                    <mat-form-field >
+                                            <input matInput placeholder="RelativePath STS contains !" type="text"    id="field_name"
+                                                formControlName="name"/>
+                                            <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="nameControl.value" (click)="setToNullValue(nameControl)">
+                                                    <mat-icon>close</mat-icon>
+                                            </button>
+                                    </mat-form-field>
+
+                                    <!-- <mat-checkbox formControlName="owner">For Current User </mat-checkbox> -->
+
+                                </div>
+                                <div>
+                                        <!-- <mat-form-field>
+                                                <mat-select placeholder="Authors" [formControl]="allUser" multiple>
+                                                  <mat-select-trigger>
+                                                    {{allUser.value ? allUser.value[0] : ''}}
+                                                    <span *ngIf="allUser.value?.length > 1" class="author-additional-selection">
+                                                       (+{{allUser.value.length - 1}} {{allUser.value?.length === 2 ? 'other' : 'others'}})
+                                                    </span>
+                                                  </mat-select-trigger>
+                                                  <mat-option *ngFor="let author of allUserList" [value]="author">{{author}}</mat-option>
+                                                </mat-select>
+                                        </mat-form-field> -->
+
+
+                                    <mat-form-field >
+                                            <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="configDataSetControl.value" (click)="setToNullValue(configDataSetControl)">
+                                                    <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-select id="field_configDataSet" placeholder="ConfigDataSet" formControlName="configDataSet">
+
+                                                <mat-option>None</mat-option>
+
+                                                <ng-container *ngFor="let configDataSet of filesDatasetConfig">
+                                                    <mat-option value="{{configDataSet.id}}">{{configDataSet.name}}</mat-option>
+                                                </ng-container>
+
+                                            </mat-select>
+                                    </mat-form-field>
+
+                                </div>
+
+                                <!-- Créated Date beetween -->
+                                <div class="row">
+                                    <jhi-moment-datetime placeHolder='Created between'
+                                    [min]="minDateDebut" [max]="maxDateDebut"
+                                    [id]="field_startDate"
+                                    [name]="startDate" [formControlName]="startDate"
+                                    (dateChange)="onBlurFromDate($event)"
+                                    ></jhi-moment-datetime>  
+
+
+
+
+                                    <jhi-moment-datetime placeHolder='And'
+                                    [min]="minDateFin" [max]="maxDateFin"
+                                    id="field_endDate"
+                                    [name]="endDate" [formControlName]="endDate"
+                                    (dateChange)="onBlurFromDate($event)"
+                                    ></jhi-moment-datetime>  
+
+                                    <!-- <mat-form-field>
+                                            <input matInput [matDatepicker]="picker1c" [min]="minDateDebut" [max]="maxDateDebut" placeholder="Created between"
+                                                    id="field_startDate" name="startDate" formControlName="startDate" (dateChange)="onBlurFromDate($event)">
+                                            <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="startDateControl.value" (click)="setToNullValue(startDateControl)">
+                                                    <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-datepicker-toggle matSuffix [for]="picker1c"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker1c></mat-datepicker>
+                                    </mat-form-field>
+
+
+                                    <mat-form-field>
+                                            <input matInput [matDatepicker]="picker2c" placeholder="And" [min]="minDateFin" [max]="maxDateFin"
+                                                    id="field_endDate" name="endDateTime" formControlName="endDate"  (dateChange)="onBlurFromDate($event)">
+                                            <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="endDateControl.value" (click)="setToNullValue(endDateControl)">
+                                                    <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-datepicker-toggle matSuffix [for]="picker2c"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker2c></mat-datepicker>
+                                            <mat-error *ngIf="endDateControl.hasError('mustBeGrantThenStartDate')">
+                                                    <strong>
+                                                         {{'messages.mustBeGrantThenStartDate'}}
+                                                    </strong>
+                                            </mat-error>
+                                    </mat-form-field> -->
+
+
+                                     
+                                 </div>
+
+                                          <!-- Date de la demande -->
+                                <!-- <mat-form-field fxFlex="15">
+                                        <input autocomplete="off" matInput [min]="minDate" [max]="maxDate" [matDatepicker]="dp" placeholder="Date de la demande"
+                                        tabindex="4" formControlName="dateDemande">
+                                        <mat-datepicker-toggle id="dateDemande" matSuffix [for]="dp"></mat-datepicker-toggle>
+                                        <mat-datepicker #dp></mat-datepicker>
+                                        <mat-error *ngIf="dateDemandeControl.hasError('dateLength')">
+                                        <strong>
+                                            {{'messages.erreurDateLength' | translate}}
+                                        </strong>
+                                        </mat-error>
+                                        <mat-error *ngIf="dateDemandeControl.hasError('wrongFormat')">
+                                        <strong>
+                                            {{'messages.erreurDateFormat' | translate}}
+                                        </strong>
+                                        </mat-error>
+                                        <mat-error *ngIf="dateDemandeControl.hasError('matDatepickerParse')">
+                                        <strong>
+                                            {{'messages.erreurDateValid' | translate}}
+                                        </strong>
+                                        </mat-error>
+                                        <mat-error *ngIf="dateDemandeControl.hasError('matDatepickerMin')">
+                                        <strong>
+                                            {{'messages.erreurLimitInfDate' | translate}}
+                                        </strong>
+                                        </mat-error>
+                                        <mat-error *ngIf="dateDemandeControl.hasError('matDatepickerMax')">
+                                        <strong>
+                                            {{'messages.erreurLimitSupDate' | translate}}
+                                        </strong>
+                                        </mat-error>
+                                </mat-form-field> -->
+
+
+                                <!-- <div>
+
+                                    <mat-form-field>
+                                          <input matInput atp-time-picker placeholder="Start Time" type="text"
+                                               id="field_startTime" name="startSimulatedTime" formControlName="startTime">
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                          <input matInput atp-time-picker placeholder="End Time" type="text"
+                                               id="field_endTime" name="endSimulatedTime" formControlName="endTime">
+                                    </mat-form-field>
+                                </div> -->
+                        </div>
+                    </mat-grid-tile>
+
+
+                    <mat-grid-tile>
+                        <div class="controles-container">
+                            <div>
+                                <mat-form-field  >
+                                       <input matInput [matDatepicker]="picker3c" placeholder="Time of data between"
+                                               id="field_startTime" name="startSimulatedTime" formControlName="startTime" [min]="minDateTimeDebut" [max]="maxDateTimeDebut" (dateChange)="onBlurFromDate($event)">
+                                        <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="startTimeControl.value" (click)="setToNullValue(startTimeControl)">
+                                                <mat-icon>close</mat-icon>
+                                        </button>
+                                       <mat-datepicker-toggle matSuffix [for]="picker3c"></mat-datepicker-toggle>
+                                       <mat-datepicker #picker3c></mat-datepicker>
+                                </mat-form-field>        
+                                <mat-form-field  >
+                                        <input matInput [matDatepicker]="picker4c" placeholder="And"
+                                                id="field_endTime" name="endSimulatedTime" formControlName="endTime" [min]="minDateTimeFin" [max]="maxDateTimeFin" (dateChange)="onBlurFromDate($event)">
+                                        <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="endTimeControl.value" (click)="setToNullValue(endTimeControl)">
+                                                <mat-icon>close</mat-icon>
+                                        </button>
+                                        <mat-datepicker-toggle matSuffix [for]="picker4c"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker4c></mat-datepicker>
+                                 </mat-form-field>     
+
+                            </div>
+                            <div>
+                                <mat-form-field >
+                                    <input matInput placeholder="Format" type="text"    id="field_format"
+                                        formControlName="formatConfigFile"/>
+                                    <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="formatConfigFileControl.value" (click)="setToNullValue(formatConfigFileControl)">
+                                            <mat-icon>close</mat-icon>
+                                    </button>
+
+                                        <!-- <mat-select id="field_format" placeholder="Format" formControlName="formatConfigFile">
+                                            <mat-option>None</mat-option>
+                                            <ng-container *ngFor="let format of formats">
+                                                <mat-option value="{{format.id}}">{{format.value}}</mat-option>
+                                            </ng-container>
+                                         </mat-select> -->
+                                </mat-form-field>
+
+                                <mat-form-field >
+                                    <input matInput placeholder="File Type" type="text"    id="field_filetype"
+                                        formControlName="typeConfigFile"/>
+                                    <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="typeConfigFileControl.value" (click)="setToNullValue(typeConfigFileControl)">
+                                            <mat-icon>close</mat-icon>
+                                    </button>
+
+                                        <!-- <mat-select id="field_filetype" placeholder="File Type" formControlName="typeConfigFile">
+                                            <mat-option>None</mat-option>
+                                            <ng-container *ngFor="let filetype of filesType">
+                                                    <mat-option value="{{filetype.id}}">{{filetype.value}}</mat-option>
+                                            </ng-container>
+                                         </mat-select> -->
+                                </mat-form-field>
+                            </div>
+                             <!--SubSystemAtOriginOfData && securityLevel   -->
+                            <div>
+                                    <mat-form-field >
+
+                                        <input matInput placeholder="Sub Sys" type="text"    id="field_subSystemOriginOfData"
+                                            formControlName="subSys"/>
+                                        <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear" *ngIf="subSysControl.value"  (click)="setToNullValue(subSysControl)">
+                                                <mat-icon>X</mat-icon>
+                                        </button>
+
+                                            <!-- <mat-select id="field_subSystemOriginOfData" placeholder="Sub Sys" formControlName="subSys">
+                                                <mat-option>None</mat-option>
+                                                <ng-container *ngFor="let subsystem of subSystems">
+                                                    <mat-option value="{{subsystem.id}}">{{subsystem.value}}</mat-option>
+                                                </ng-container>
+                                             </mat-select> -->
+                                    </mat-form-field>
+
+                                    <mat-form-field *ngIf="true">
+                                            <mat-select id="field_securityLevel" placeholder="Secure Level" formControlName="secureLevel"  [formControl]="selectedOption">
+
+                                                <ng-container *ngFor="let securityLevel of securitysLevel; let index i">
+                                                    <mat-option value="{{securityLevel}} " [disabled]="currentAutoritie[0]=='ROLE_USER' && securityLevel==securitysLevel[1]">{{securityLevel}}</mat-option>
+                                                </ng-container>
+                                            </mat-select>
+                                    </mat-form-field>
+                            </div>
+
+                        </div>
+
+                     </mat-grid-tile>
+
+                 </mat-grid-list>
+                 <div class="button-row">
+                        <button mat-raised-button color="primary" type="submit">Search</button>
+                        <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
+                 </div>
+
+
+              </form>
+            </ng-container>
+
+                    <!-- <fieldset>
+                        <legend>Filters</legend>
+                    <form name="searchForm" role="form" (ngSubmit)="search()" [formGroup]="searchForm">
+                        <div class="form-group">
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <div class="col">
+                                    <label class="form-control-label" for="field_simulation">Created between</label>
+                                    <div class="input-group">
+                                        <input id="startDate" type="text" class="form-control"
+                                               name="startDate" ngbDatepicker #startSimulatedDateDp="ngbDatepicker"
+                                               formControlName="startDate"/>
+
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label class="form-control-label" for="field_simulation">And</label>
+                                    <div class="input-group">
+                                        <input id="endDate" type="text" class="form-control"
+                                               name="endDate" ngbDatepicker #simulationDp="ngbDatepicker"
+                                               formControlName="endDate"/>
+                                        <span class="input-group-append">
+                                <button type="button" class="btn btn-secondary" (click)="simulationDp.toggle()"><fa-icon
+                                    [icon]="'calendar-alt'"></fa-icon></button>
+                                </span>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-2">
+                                    <button type="submit" id="search-entity"  class="btn btn-primary">
+                                        <fa-icon [icon]="'search'"></fa-icon>&nbsp;<span>Search</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    </fieldset> -->
+                    <!-- *ngIf="scenarioFiles?.length > 0" -->
+                    <mat-card class="group-button" >
+                        <button mat-raised-button color="primary" id="add-sts-entity">
+                           <fa-icon [icon]="'plus'"></fa-icon>&nbsp;<span>Add from STS</span>
+                        </button>
+                        <button mat-raised-button color="primary" id="add-local-entity">
+                            <fa-icon [icon]="'plus'"></fa-icon>&nbsp;<span>Add from local</span>
+                        </button>
+                        <button mat-raised-button color="primary" id="retrieve-entity">
+                            <fa-icon [icon]="'upload'"></fa-icon>&nbsp;<span>Retrieve</span>
+                        </button>
+                    </mat-card>
+                    <!--  -->
+                    <!-- <div class="mat-elevation-z8">
+                        <mat-toolbar>
+                                <span class="fill-remaining-space"></span>
+                                <span>Scenario Files</span>
+                                <span class="fill-remaining-space"></span>
+                        </mat-toolbar>
+
+                    <mat-table [dataSource]="scenarioFiles" matSort>
+                        <ng-container matColumnDef="fileType">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>File Type</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{element.fileType}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="relativePathInST">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Relative Path In ST</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.relativePathInST}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lTInsertionDate">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>L T Insertion Date</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.lTInsertionDate}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="pathInLT">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Path In LT</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.pathInLT}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="format">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Format</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.format}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="subSystemAtOriginOfData">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>SubSys Origin</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.subSystemAtOriginOfData}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="timeOfData">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Time Of Data</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.timeOfData}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="securityLevel">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Security Level</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.securityLevel}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+                                <mat-cell *matCellDef="let row; let element">
+                                    <button mat-icon-button><mat-icon>launch</mat-icon></button>
+                                    <button mat-icon-button color="warn" [disabled]="element.ownerId!==currentAccount.id" (click)="deleteScenarioFile(element.id)"><mat-icon>delete_outline</mat-icon></button>
+                                </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="loading">
+                                <mat-footer-cell *matFooterCellDef colspan="6">
+                                    Loading data...
+                                </mat-footer-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef colspan="6">
+                                    NO data.
+                                </mat-footer-cell>
+                        </ng-container>
+
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':dataSource!==null}"></mat-footer-row> -->
+                        <!-- <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(listData2!==null && listData2.data.length==0)}"></mat-footer-row> -->
+                    <!-- </mat-table>
+                    <mat-paginator [length]="100" [pageSizeOptions]="[5,10,25,100]" [pageSize]="itemsPerPage" showFirstLastButtons></mat-paginator>
+                </div>  -->
+                        <div *ngIf="req">
+                          <jhi-scenario-file  [req]="req" [currentAccount]="currentAccount"   (changeIndexPage)="changeIndexPage($event)"  (changeitemsPerPage)="changeItemsPerPage($event)"></jhi-scenario-file>
+                        </div>
+                        </div>
+
+                    <!-- <div class="table-responsive" >
+                        <table class="table table-striped" aria-describedby="page-heading">
+                            <thead>
+                            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+                                <th><input type="checkbox" (change)="checkUncheckAll($event)" name="activated" id="activated"></th>
+                                <th jhiSortBy="relativePathInST"><span>Relative Path In ST</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th jhiSortBy="lTInsertionDate"><span>L T Insertion Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th jhiSortBy="format"><span>Format</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th jhiSortBy="timeOfData"><span>Time Of Data</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th jhiSortBy="ownerId"><span>Owner</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let scenarioFile of scenarioFiles ;trackBy: trackId">
+                                <td><input type="checkbox" name="activated"  id="activateItem" value="{{scenarioFile.relativePathInST}}"></td>
+                                <td>{{scenarioFile.relativePathInST}}</td>
+                                <td>{{scenarioFile.lTInsertionDate | date:'mediumDate'}}</td>
+                                <td>{{scenarioFile.format}}</td>
+                                <td>{{scenarioFile.timeOfData | date:'mediumDate'}}</td>
+                                <td>{{scenarioFile.ownerId}}</td>
+                                <td class="text-right">
+                                    <div class="btn-group">
+                                        <button type="button" (click)="deleteScenarioFile(scenarioFile)"
+                                                class="btn btn-danger btn-sm">
+                                            <fa-icon [icon]="'times'"></fa-icon>
+                                            <span class="d-none d-md-inline">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div> -->
+                    <!-- <div *ngIf="scenarioFiles?.length > 0">
+                        <div class="row justify-content-center">
+                            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+                        </div>
+                        <div class="row justify-content-center">
+                            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+                        </div>
+                    </div> -->
+            </ng-template>
+        </mat-tab>
+        <!-- *************Third Tab***************** -->
+        <mat-tab label="Input Files" title="Input Files">
+
+            <ng-template matTabContent>
+
+
+              <!-- <div fxLayout="row" class="topLeftPadding">
+                <div class="flex-item">
+                    <mat-form-field fxFlex="40">
+                            <input matInput [matDatepicker]="picker1" placeholder="Created between">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="flex-item">
+                    <mat-form-field fxFlex="5">
+                            <input matInput [matDatepicker]="picker2" placeholder="And">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col col-lg-2">
+                            <button mat-stroked-button type="submit" id="search-entity"  class="btn btn-primary">
+                                <fa-icon [icon]="'search'"></fa-icon>&nbsp;<span>Search</span>
+                            </button>
+                </div>
+
+             </div>  -->
+
+             <div class="container topLeftPadding">
+                    <div fxLayout="row">
+                            <div class="col">
+                                    <mat-form-field fxFlex="40">
+                                            <input matInput [matDatepicker]="picker1" placeholder="Created between">
+                                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+
+                            </div>
+                            <div class="col">
+                                    <mat-form-field fxFlex="40">
+                                            <input matInput [matDatepicker]="picker2" placeholder="And">
+                                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker2></mat-datepicker>
+                                    </mat-form-field>
+                            </div>
+                    </div>
+                    <div class="col col-lg-2">
+                            <button mat-stroked-button type="submit" id="search-entity"  class="btn btn-primary">
+                                <fa-icon [icon]="'search'"></fa-icon>&nbsp;<span>Search</span>
+                            </button>
+                    </div>
+            </div>
+            </ng-template>
+
+        </mat-tab>
+    </mat-tab-group>
+</mat-card>
+</div>
+
+</div>

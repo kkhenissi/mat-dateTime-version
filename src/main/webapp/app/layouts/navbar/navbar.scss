@@ -1,0 +1,75 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+
+/* ==========================================================================
+Navbar
+========================================================================== */
+
+.navbar-version {
+  font-size: 0.65em;
+  color: $navbar-dark-color;
+}
+
+.navbar-title {
+  font-family: 'Helvetica Neue';
+  font-weight: bold;
+}
+
+.profile-image {
+  height: 1.75em;
+  width: 1.75em;
+}
+
+.bg-dark {
+  background-color: #00205b !important;
+}
+
+.navbar {
+  padding: 0.2rem 1rem;
+  ul.navbar-nav {
+    .nav-item {
+      margin-left: 0.5em;
+    }
+  }
+
+  ul.dropdown-menu {
+    background-color: #003f82;
+    opacity: 0.75;
+  }
+
+  a.dropdown-item {
+    color: #fff;
+    font-family: 'Helvetica Neue';
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  a.dropdown-item:hover {
+    background-color: #00205b;
+  }
+  a.nav-link {
+    font-family: 'Helvetica Neue';
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 150%;
+    color: #fff;
+    display: block;
+    padding: 27px 0;
+    margin: 0 11px;
+    margin-left: 11px;
+    text-transform: capitalize;
+  }
+}
+
+/* ==========================================================================
+Logo styles
+========================================================================== */
+.logo-img {
+  height: 50px;
+  width: 170px;
+  display: inline-block;
+  vertical-align: middle;
+  background: url('../../../content/images/logo-airbus.png') no-repeat center center;
+  background-size: contain;
+  margin-bottom: 4px;
+}

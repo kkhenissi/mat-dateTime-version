@@ -1,0 +1,97 @@
+<div>
+    <h2 id="page-heading">
+        <span>Output Files</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-output-file" [routerLink]="['/output-file/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create a new Output File
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="outputFiles?.length === 0">
+        <span>No outputFiles found</span>
+    </div>
+    <div class="table-responsive" *ngIf="outputFiles?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="relativePathInST"><span>Relative Path In ST</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lTInsertionDate"><span>L T Insertion Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="pathInLT"><span>Path In LT</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fileType"><span>File Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="format"><span>Format</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="subSystemAtOriginOfData"><span>Sub System At Origin Of Data</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="timeOfData"><span>Time Of Data</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="securityLevel"><span>Security Level</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="crc"><span>Crc</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="ownerId"><span>Owner</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="runId"><span>Run</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="jobId"><span>Job</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let outputFile of outputFiles ;trackBy: trackId">
+                <td><a [routerLink]="['/output-file', outputFile.id, 'view' ]">{{outputFile.id}}</a></td>
+                <td>{{outputFile.relativePathInST}}</td>
+                <td>{{outputFile.lTInsertionDate | date:'mediumDate'}}</td>
+                <td>{{outputFile.pathInLT}}</td>
+                <td>{{outputFile.fileType}}</td>
+                <td>{{outputFile.format}}</td>
+                <td>{{outputFile.subSystemAtOriginOfData}}</td>
+                <td>{{outputFile.timeOfData | date:'mediumDate'}}</td>
+                <td>{{outputFile.securityLevel}}</td>
+                <td>{{outputFile.crc}}</td>
+                <td>
+                    {{outputFile.ownerId}}
+                </td>
+                <td>
+                    <div *ngIf="outputFile.runId">
+                        <a [routerLink]="['/run', outputFile.runId , 'view' ]" >{{outputFile.runId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="outputFile.jobId">
+                        <a [routerLink]="['/transfer', outputFile.jobId , 'view' ]" >{{outputFile.jobId}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/output-file', outputFile.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/output-file', outputFile.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/output-file', { outlets: { popup: outputFile.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div [hidden]="outputFiles?.length === 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

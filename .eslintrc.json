@@ -1,0 +1,16 @@
+{
+  "plugins": ["@typescript-eslint/tslint"],
+  "extends": ["jhipster"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "no-console": "off",
+    "@typescript-eslint/tslint/config": [
+      "error",
+      {
+        "lintFile": "./tslint.json"
+      }
+    ]
+  }
+}

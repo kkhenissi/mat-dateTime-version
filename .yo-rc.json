@@ -1,0 +1,43 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.airbus.archivemanager"
+    },
+    "jhipsterVersion": "6.5.1",
+    "applicationType": "monolith",
+    "baseName": "archivemanager",
+    "packageName": "com.airbus.archivemanager",
+    "packageFolder": "com/airbus/archivemanager",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "Y2ZkMDIxMTIzZmNiZWM3NzQ4NWUxYjg2MTY0MWY4MTE3OGIwNjExMmI4YjBkZDdjYzllY2RlM2E4ODdhODY2MzVkMTRhZmNhZTRkMzQ5OTY0ZTBkMmIxMTQ5OTM1ZDM2YTg2ZmQxYjYxNTRjNTY2YzY2Y2Q4YTg0Y2FmNzU5YjE=",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "testFrameworks": [
+      "gatling",
+      "cucumber",
+      "protractor"
+    ],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "blueprints": [],
+    "embeddableLaunchScript": false
+  }
+}

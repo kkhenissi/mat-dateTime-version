@@ -1,0 +1,66 @@
+{
+    "name": "Run",
+    "fields": [
+        {
+            "fieldName": "startDate",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "endDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "RunStatus",
+            "fieldValues": "UNKNOWN,READY,IN_PROGRESS,DONE,FAILED"
+        },
+        {
+            "fieldName": "platformHardwareInfo",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "outputFile",
+            "otherEntityRelationshipName": "run",
+            "relationshipName": "outputFiles"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "toolVersion",
+            "otherEntityRelationshipName": "run",
+            "relationshipName": "toolVersions"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "runs",
+            "relationshipName": "owner",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "scenario",
+            "otherEntityRelationshipName": "runs",
+            "relationshipName": "scenario",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20191001144013",
+    "entityTableName": "run",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

@@ -1,0 +1,11 @@
+version: '2.1'
+services:
+  archivemanager-postgresql:
+    image: postgres:11.5
+    volumes:
+      - ${VOLUMES_ARCHIVEMANAGER_PATH}/postgresql_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=archivemanager
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432

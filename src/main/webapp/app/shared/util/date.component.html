@@ -1,0 +1,14 @@
+
+<form [formGroup]="group">
+  <mat-form-field>
+     <mat-placeholder>{{placeHolder}}</mat-placeholder>
+    <input matInput   [matDatetimepicker]="formControlName" [name]="name">
+    <button mat-button type="button" matSuffix mat-icon-button aria-label="Clear">
+        <mat-icon>close</mat-icon>
+    </button>
+    <mat-datetimepicker-toggle [for]="formControlName" matSuffix></mat-datetimepicker-toggle>
+
+    <mat-datetimepicker #formControlName type="datetime" openOnFocus="true" mode="portrait" timeInterval="5" ></mat-datetimepicker>
+  </mat-form-field>
+  <!-- [min]="min" [max]="max" -->
+</form>

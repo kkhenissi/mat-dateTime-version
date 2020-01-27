@@ -1,0 +1,138 @@
+
+
+
+entity ScenarioFile {
+	fileType FileType required,
+    relativePathInST String required,
+    lTInsertionDate LocalDate,
+    pathInLT String,
+    fileType String,
+    format String,
+    subSystemAtOriginOfData String,
+    timeOfData LocalDate,
+    securityLevel EnumSecurityLevel,
+    crc String
+}
+entity OutputFile {
+    relativePathInST String required,
+    lTInsertionDate LocalDate,
+    pathInLT String,
+    fileType String,
+    format String,
+    subSystemAtOriginOfData String,
+    timeOfData LocalDate,
+    securityLevel EnumSecurityLevel,
+    crc String
+}
+
+entity DataFile {
+    pathInLT String,
+	raw Blob
+}
+
+enum FileType {
+ INPUT, CONFIG
+}
+
+entity Scenario {
+    name String unique required,
+    creationDate LocalDate,
+    simulationMode SimulationModeType
+    startSimulatedDate LocalDate,
+    simulation LocalDate,
+	description String
+}
+
+entity Run {
+    startDate LocalDate required,
+    endDate LocalDate,
+    status RunStatus,
+    platformHardwareInfo String,
+	description String
+}
+
+entity ToolVersion {
+	name String required,
+    version String required
+}
+
+entity Transfer {
+   name String required,
+   direction Direction required,
+   status TransferStatus
+}
+
+entity DataSet {
+  name String required
+}
+entity ConfigDataSet {
+ name String required
+}
+
+entity UserPreferences {
+
+}
+
+enum Direction {
+  LTS_TO_STS, STS_TO_LTS
+}
+
+
+enum RunStatus {
+  UNKNOWN, READY, IN_PROGRESS, DONE, FAILED
+}
+
+enum TransferStatus {
+  IN_EDITION, IN_PROGRESS, DONE, FAILED
+}
+
+enum SimulationModeType {
+  PLAY, REPLAY, UNDEFINED
+}
+
+enum EnumSecurityLevel {
+  NORMAL, EIC
+}
+
+relationship OneToOne {
+   UserPreferences{user} to User{preference}
+}
+
+relationship ManyToMany {
+   ScenarioFile{scenarios} to Scenario{scenarioFiles}
+}
+
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+   Scenario{runs} to Run{scenario},
+   Run{outputFiles} to OutputFile{run},
+   Run{toolVersions} to ToolVersion{run},
+   Transfer{outputFiles} to OutputFile{job},
+   Transfer{configFiles} to ScenarioFile{job},
+   DataSet{inputFiles} to ScenarioFile{dataset},
+   ConfigDataSet{configFiles} to ScenarioFile{configDataset}
+}
+
+relationship ManyToOne {
+   Scenario{owner} to User{scenarios} ,
+   Run{owner}to  User{runs},
+   Transfer{owner} to User{jobs} ,
+   ScenarioFile{owner} to  User{scenarioFiles} ,
+   OutputFile{owner} to  User{outputFiles} ,
+}
+
+// Set pagination options
+ 
+paginate Run, Scenario, ToolVersion, OutputFile, ScenarioFile, Transfer with pagination
+
+filter Run, Scenario, ToolVersion, OutputFile, ScenarioFile
+
+// Use Data Transfert Objects (DTO)
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl // except Employee, Job
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
+

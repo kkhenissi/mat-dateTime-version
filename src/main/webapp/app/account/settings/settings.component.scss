@@ -1,0 +1,67 @@
+h2 {
+  font-family: 'HelveticaNeueW01-Thin';
+  font-size: 40px;
+  line-height: 120%;
+  margin-bottom: 30px;
+  color: #183782;
+  font-weight: normal;
+}
+
+label {
+  color: rgb(114, 114, 115);
+  font-weight: 400;
+  font-family: Roboto, 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, sans-serif;
+  letter-spacing: 0.4px;
+  font-size: 14px;
+}
+
+input.form-control {
+  font-size: 16px;
+  height: 48px;
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgb(222, 224, 224);
+  transition: border-color 0.2s ease 0s;
+  border-radius: 2px;
+  font-family: Roboto, 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, sans-serif;
+  color: rgb(63, 64, 64);
+  outline: currentcolor none medium;
+  letter-spacing: 0.2px;
+  padding: 0px 12px;
+  line-height: normal;
+}
+
+.btn {
+  font-size: 16px;
+  line-height: 20px;
+  padding: 0px 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 48px;
+  width: 90px;
+  min-width: 112px;
+  font-weight: 400;
+  font-family: Roboto, 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, sans-serif;
+  border-radius: 2px;
+  letter-spacing: 0.4px;
+  box-shadow: none;
+  text-shadow: none;
+  text-transform: capitalize;
+  border: medium none;
+  cursor: pointer;
+  outline: currentcolor none medium;
+  color: white;
+  background-color: rgb(8, 35, 75);
+}
+
+.alert-success {
+  border-style: solid;
+  border-width: 1px;
+  padding: 16px;
+  line-height: 1;
+  box-sizing: border-box;
+  background-color: rgb(132, 189, 0);
+  border-color: rgb(132, 189, 0);
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+}

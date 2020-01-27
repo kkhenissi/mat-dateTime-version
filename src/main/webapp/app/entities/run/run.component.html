@@ -1,0 +1,83 @@
+<div>
+    <h2 id="page-heading">
+        <span>Runs</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-run" [routerLink]="['/run/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create a new Run
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="runs?.length === 0">
+        <span>No runs found</span>
+    </div>
+    <div class="table-responsive" *ngIf="runs?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="startDate"><span>Start Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="endDate"><span>End Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="status"><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="platformHardwareInfo"><span>Platform Hardware Info</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="ownerId"><span>Owner</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="scenarioId"><span>Scenario</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let run of runs ;trackBy: trackId">
+                <td><a [routerLink]="['/run', run.id, 'view' ]">{{run.id}}</a></td>
+                <td>{{run.startDate | date:'mediumDate'}}</td>
+                <td>{{run.endDate | date:'mediumDate'}}</td>
+                <td>{{run.status}}</td>
+                <td>{{run.platformHardwareInfo}}</td>
+                <td>{{run.description}}</td>
+                <td>
+                    {{run.ownerId}}
+                </td>
+                <td>
+                    <div *ngIf="run.scenarioId">
+                        <a [routerLink]="['/scenario', run.scenarioId , 'view' ]" >{{run.scenarioId}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/run', run.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/run', run.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/run', { outlets: { popup: run.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div [hidden]="runs?.length === 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

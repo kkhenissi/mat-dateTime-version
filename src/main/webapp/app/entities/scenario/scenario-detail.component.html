@@ -1,0 +1,51 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="scenario">
+            <h2><span>Scenario</span> {{scenario.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{scenario.name}}</span>
+                </dd>
+                <dt><span>Creation Date</span></dt>
+                <dd>
+                    <span>{{scenario.creationDate}}</span>
+                </dd>
+                <dt><span>Simulation Mode</span></dt>
+                <dd>
+                    <span>{{scenario.simulation}}</span>
+                </dd>
+                <dt><span>Start Simulated Date</span></dt>
+                <dd>
+                    <span>{{scenario.startSimulatedDate}}</span>
+                </dd>
+                <dt><span>End Simulated Date</span></dt>
+                <dd>
+                    <span>{{scenario.simulation}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{scenario.description}}</span>
+                </dd>
+                <dt><span>Owner</span></dt>
+                <dd>
+                    {{scenario.ownerId}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/scenario', scenario.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
